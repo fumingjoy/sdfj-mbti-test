@@ -111,99 +111,146 @@
 (function(){
   "use strict";
 
+  /* ========== 15道题，每题选项绑定权重 ========== */
   var questionsData = [
-    { q: "第1题：周末突然空出一整天，你最想怎么过？", options: [
-      { text: "一个人写歌、听歌、发呆，安静待着", type: "A" },
-      { text: "去跳舞、运动、做饭、画画，反正要动起来", type: "B" },
-      { text: "随便躺着，刷点好玩的，朋友叫我就出去", type: "C" },
-      { text: "打游戏、踢球、玩滑板，最好有点刺激", type: "D" }
-    ]},
-    { q: "第2题：你在陌生人群里通常是什么状态？", options: [
-      { text: "话不多，但观察得很细", type: "A" },
-      { text: "很快能热场，带大家玩起来", type: "B" },
-      { text: "表面呆萌，思维已经飘到别的地方", type: "C" },
-      { text: "遇强则强，有人卷我我就来劲", type: "D" }
-    ]},
-    { q: "第3题：别人对你的第一印象，最可能是？", options: [
-      { text: "稳、成熟、有责任感", type: "A" },
-      { text: "热烈、大方、大哥范儿", type: "B" },
-      { text: "干净、佛系、随遇而安", type: "C" },
-      { text: "有冲劲、争强好胜", type: "D" }
-    ]},
-    { q: "第4题：你最容易因为什么感到疲惫？", options: [
-      { text: "社交压力、被迫营业、想得太多", type: "A" },
-      { text: "太热闹，别人一直要我回应", type: "B" },
-      { text: "没有挑战，或者被人看不起", type: "C" },
-      { text: "自己不够完美，进度不够快", type: "D" }
-    ]},
-    { q: "第5题：朋友难过时，你更可能？", options: [
-      { text: "安静陪着，说点有深度的话", type: "A" },
-      { text: "直接带他出去跑一圈、吃一顿", type: "B" },
-      { text: "用轻松的方式逗他，不刻意沉重", type: "C" },
-      { text: "帮他分析问题，按逻辑解决", type: "D" }
-    ]},
-    { q: "第6题：你对待舞台/工作的态度更像？", options: [
-      { text: "喜欢艺术本身，不喜欢娱乐流量", type: "A" },
-      { text: "沉醉舞台，代入感强", type: "B" },
-      { text: "有综艺感，因为身上没包袱", type: "C" },
-      { text: "追求完美，非常自律，包揽策划", type: "D" }
-    ]},
-    { q: "第7题：你的房间/桌面通常是什么样？", options: [
-      { text: "东西不多，但有自己的秩序", type: "A" },
-      { text: "运动装备、发带、做饭工具随手放", type: "B" },
-      { text: "看起来乱，但我知道东西在哪", type: "C" },
-      { text: "网盘、文件、计划表都很整齐", type: "D" }
-    ]},
-    { q: "第8题：如果团队里出现尴尬冷场，你会？", options: [
-      { text: "不一定主动，但会观察谁需要救场", type: "A" },
-      { text: "直接站出来带气氛", type: "B" },
-      { text: "随口说句好笑的，不让话掉地上", type: "C" },
-      { text: "快速给方案，把节奏拉回正轨", type: "D" }
-    ]},
-    { q: "第9题：你更认同哪句话？", options: [
-      { text: "理想主义不是幼稚，是坚持", type: "A" },
-      { text: "热烈张扬，带大家无顾忌奔跑", type: "B" },
-      { text: "随遇而安，开心就好", type: "C" },
-      { text: "不完美，就继续练到完美", type: "D" }
-    ]},
-    { q: "第10题：你面对压力时最常？", options: [
-      { text: "自己消化，显得有点负能量", type: "A" },
-      { text: "动起来，跳舞运动做饭画画", type: "B" },
-      { text: "佛系躺平，顺其自然", type: "C" },
-      { text: "加压训练，自律到紧绷", type: "D" }
-    ]},
-    { q: "第11题：你最容易被人评价为？", options: [
-      { text: "成熟深邃，责任感强", type: "A" },
-      { text: "简单直接，大方真诚", type: "B" },
-      { text: "清新干净，坦然佛系", type: "C" },
-      { text: "高能量、事业批、完美主义", type: "D" }
-    ]},
-    { q: "第12题：如果给你一个完全自由的创作任务，你会？", options: [
-      { text: "写歌、唱歌，表达内心", type: "A" },
-      { text: "编舞、跳舞，用身体表达", type: "B" },
-      { text: "随便玩，灵感来了就做", type: "C" },
-      { text: "策划、编舞、拍摄、剪辑全包", type: "D" }
-    ]},
-    { q: "第13题：你更害怕哪种情况？", options: [
-      { text: "失去艺术初心，被流量裹挟", type: "A" },
-      { text: "团队不和谐，有人被冷落", type: "B" },
-      { text: "被束缚，不能随性", type: "C" },
-      { text: "自己不够好，拖累团队", type: "D" }
-    ]},
-    { q: "第14题：你的朋友最可能怎么形容你？", options: [
-      { text: "稳，不炸，像队长", type: "A" },
-      { text: "老顽童，舞台疯子", type: "B" },
-      { text: "呆萌，思维跳跃", type: "C" },
-      { text: "自律，完美主义，事业心强", type: "D" }
-    ]},
-    { q: "第15题：你希望别人怎么记住你？", options: [
-      { text: "一个坚持艺术的人", type: "A" },
-      { text: "一个热烈真诚的人", type: "B" },
-      { text: "一个干净随性的人", type: "C" },
-      { text: "一个追求完美的人", type: "D" }
-    ]}
+    {
+      q: "第1题：周末突然空出一整天，你最想怎么过？",
+      options: [
+        { text: "一个人写歌、听歌、发呆，安静待着", weights: {majiaqi:3, wanglujie:2, yanhaoxiang:1} },
+        { text: "去跳舞、运动、做饭、画画，反正要动起来", weights: {dingchengxin:3, zhangguiyuan:2, lvzhengxi:1} },
+        { text: "随便躺着，刷点好玩的，朋友叫我就出去", weights: {songyaxuan:3, zhangji:2, huami:1} },
+        { text: "打游戏、踢球、玩滑板，最好有点刺激", weights: {liuwen:3, zhangzeyu:2, houwangzi:1} }
+      ]
+    },
+    {
+      q: "第2题：你在陌生人群里通常是什么状态？",
+      options: [
+        { text: "话不多，但观察得很细", weights: {majiaqi:2, yangbowen:2, gaomingyang:2, yanhaoxiang:1} },
+        { text: "很快能热场，带大家玩起来", weights: {dingchengxin:3, zhangzeyu:2, chenyiheng:1} },
+        { text: "表面呆萌，思维已经飘到别的地方", weights: {songyaxuan:3, zhangji:2, zhangzimo:1} },
+        { text: "遇强则强，有人卷我我就来劲", weights: {liuwen:3, suxinhao:2, zhuyingchen:1} }
+      ]
+    },
+    {
+      q: "第3题：别人对你的第一印象，最可能是？",
+      options: [
+        { text: "稳、成熟、有责任感", weights: {majiaqi:3, zhangzhenyuan:2, liuyuchen:2} },
+        { text: "热烈、大方、大哥范儿", weights: {dingchengxin:3, zhuzhixin:2, houwangzi:1} },
+        { text: "干净、佛系、随遇而安", weights: {songyaxuan:3, weizichen:2, shenzihang:1} },
+        { text: "有冲劲、争强好胜", weights: {liuwen:3, zhuyingchen:2, lvzhengxi:1} }
+      ]
+    },
+    {
+      q: "第4题：你最容易因为什么感到疲惫？",
+      options: [
+        { text: "社交压力、被迫营业、想得太多", weights: {majiaqi:3, hejunlin:2, yuyuhan:1} },
+        { text: "太热闹，别人一直要我回应", weights: {majiaqi:1, songyaxuan:2, wanglujie:2, gaomingyang:1} },
+        { text: "没有挑战，或者被人看不起", weights: {liuwen:3, zhuyingchen:2, zhangjunhao:1} },
+        { text: "自己不够完美，进度不够快", weights: {suxinhao:3, chensihan:2, zhaojunyu:1} }
+      ]
+    },
+    {
+      q: "第5题：朋友难过时，你更可能？",
+      options: [
+        { text: "安静陪着，说点有深度的话", weights: {majiaqi:3, yanhaoxiang:2, dengjiaxin:1} },
+        { text: "直接带他出去跑一圈、吃一顿", weights: {dingchengxin:3, zhangzhenyuan:2, houwangzi:1} },
+        { text: "用轻松的方式逗他，不刻意沉重", weights: {songyaxuan:3, zhangzeyu:2, tongyukun:2} },
+        { text: "帮他分析问题，按逻辑解决", weights: {yanhaoxiang:3, zhuyingchen:2, liuyuchen:1} }
+      ]
+    },
+    {
+      q: "第6题：你对待舞台/工作的态度更像？",
+      options: [
+        { text: "喜欢艺术本身，不喜欢娱乐流量", weights: {majiaqi:3, wanglujie:2, dengjiaxin:1} },
+        { text: "沉醉舞台，代入感强", weights: {dingchengxin:3, zhuzhixin:2, lvzhengxi:2} },
+        { text: "有综艺感，因为身上没包袱", weights: {songyaxuan:3, zhangzeyu:2, zhangji:2} },
+        { text: "追求完美，非常自律，包揽策划", weights: {suxinhao:3, chensihan:2, zhuyingchen:1} }
+      ]
+    },
+    {
+      q: "第7题：你的房间/桌面通常是什么样？",
+      options: [
+        { text: "东西不多，但有自己的秩序", weights: {majiaqi:3, yanhaoxiang:2, yangbowen:1} },
+        { text: "运动装备、发带、做饭工具随手放", weights: {dingchengxin:3, zhangguiyuan:2, zhangzeyu:1} },
+        { text: "看起来乱，但我知道东西在哪", weights: {songyaxuan:3, zhangji:2, huangshuo:2} },
+        { text: "网盘、文件、计划表都很整齐", weights: {suxinhao:3, chensihan:2, nieweichen:1} }
+      ]
+    },
+    {
+      q: "第8题：如果团队里出现尴尬冷场，你会？",
+      options: [
+        { text: "不一定主动，但会观察谁需要救场", weights: {majiaqi:2, yangbowen:2, wanglujie:2, yanhaoxiang:1} },
+        { text: "直接站出来带气氛", weights: {dingchengxin:3, zhangzeyu:2, houwangzi:1} },
+        { text: "随口说句好笑的，不让话掉地上", weights: {zhangzeyu:3, zhangji:2, tongyukun:2, huangshuo:1} },
+        { text: "快速给方案，把节奏拉回正轨", weights: {suxinhao:3, zhuyingchen:2, liuyuchen:1} }
+      ]
+    },
+    {
+      q: "第9题：你更认同哪句话？",
+      options: [
+        { text: "理想主义不是幼稚，是坚持", weights: {majiaqi:3, dengjiaxin:2, wanglujie:1} },
+        { text: "热烈张扬，带大家无顾忌奔跑", weights: {dingchengxin:3, zhuzhixin:2, houwangzi:1} },
+        { text: "随遇而安，开心就好", weights: {songyaxuan:3, zhangji:2, weizichen:2} },
+        { text: "不完美，就继续练到完美", weights: {suxinhao:3, chensihan:2, lvzhengxi:2} }
+      ]
+    },
+    {
+      q: "第10题：你面对压力时最常？",
+      options: [
+        { text: "自己消化，显得有点负能量", weights: {majiaqi:3, yuyuhan:2, dengjiaxin:1} },
+        { text: "动起来，跳舞运动做饭画画", weights: {dingchengxin:3, zhangguiyuan:2, lvzhengxi:1} },
+        { text: "佛系躺平，顺其自然", weights: {songyaxuan:3, zuohang:2, weizichen:2} },
+        { text: "加压训练，自律到紧绷", weights: {suxinhao:3, chensihan:2, zhuyingchen:1} }
+      ]
+    },
+    {
+      q: "第11题：你最容易被人评价为？",
+      options: [
+        { text: "成熟深邃，责任感强", weights: {majiaqi:3, zhangzhenyuan:2, liuyuchen:1} },
+        { text: "简单直接，大方真诚", weights: {dingchengxin:3, zhangzeyu:2, houwangzi:1} },
+        { text: "清新干净，坦然佛系", weights: {songyaxuan:3, weizichen:2, zhangji:1} },
+        { text: "高能量、事业批、完美主义", weights: {suxinhao:3, chensihan:2, lvzhengxi:1} }
+      ]
+    },
+    {
+      q: "第12题：如果给你一个完全自由的创作任务，你会？",
+      options: [
+        { text: "写歌、唱歌，表达内心", weights: {majiaqi:3, wanglujie:2, dengjiaxin:1} },
+        { text: "编舞、跳舞，用身体表达", weights: {dingchengxin:3, lvzhengxi:2, zhuzhixin:2} },
+        { text: "随便玩，灵感来了就做", weights: {songyaxuan:3, zhangji:2, huangshuo:2} },
+        { text: "策划、编舞、拍摄、剪辑全包", weights: {suxinhao:3, chensihan:2, zhuyingchen:1} }
+      ]
+    },
+    {
+      q: "第13题：你更害怕哪种情况？",
+      options: [
+        { text: "失去艺术初心，被流量裹挟", weights: {majiaqi:3, wanglujie:2, dengjiaxin:2} },
+        { text: "团队不和谐，有人被冷落", weights: {zhangzhenyuan:3, dingchengxin:2, muzhicheng:1} },
+        { text: "被束缚，不能随性", weights: {songyaxuan:3, zuohang:2, zhangji:1} },
+        { text: "自己不够好，拖累团队", weights: {suxinhao:3, chensihan:2, zhuyingchen:1} }
+      ]
+    },
+    {
+      q: "第14题：你的朋友最可能怎么形容你？",
+      options: [
+        { text: "稳，不炸，像队长", weights: {majiaqi:3, zhangzhenyuan:2, liuyuchen:1} },
+        { text: "老顽童，舞台疯子", weights: {dingchengxin:3, zhuzhixin:2, zhangzeyu:1} },
+        { text: "呆萌，思维跳跃", weights: {songyaxuan:3, zhangji:2, huangshuo:2} },
+        { text: "自律，完美主义，事业心强", weights: {suxinhao:3, chensihan:2, lvzhengxi:1} }
+      ]
+    },
+    {
+      q: "第15题：你希望别人怎么记住你？",
+      options: [
+        { text: "一个坚持艺术的人", weights: {majiaqi:3, wanglujie:2, dengjiaxin:1} },
+        { text: "一个热烈真诚的人", weights: {dingchengxin:3, zhuzhixin:2, houwangzi:1} },
+        { text: "一个干净随性的人", weights: {songyaxuan:3, weizichen:2, zhangji:1} },
+        { text: "一个追求完美的人", weights: {suxinhao:3, chensihan:2, zhuyingchen:1} }
+      ]
+    }
   ];
 
+  /* ========== 人物库 ========== */
   var profiles = {
     majiaqi:{name:"马嘉祺",tag:"INFP-T / 不炸、稳",keywords:"安稳写歌、唱歌；喜欢艺术本身而非娱乐流量；成熟深邃，责任感、道义感强；喜静喜聚喜平和；理想主义者",good:"你像马嘉祺一样，心里有自己的艺术标准，不喜欢被流量裹挟。你责任感强，道义感重，很多时候不是没情绪，而是习惯自己消化。",bad:"因压力大、思虑多、要求高而略显负能量；行动有时跟不上对自己的要求。",moment:"一个人写歌到深夜，第二天又稳稳站上舞台。"},
     dingchengxin:{name:"丁程鑫",tag:"老顽童 / 沉醉舞台",keywords:"跳舞、运动、发带、做饭、画画；简单直接、大方真诚，大哥范儿十足；热烈张扬",good:"你像丁程鑫一样，热烈、真诚、直接。你不怕表达，也不怕带气氛。",bad:"热烈有余谨慎不足，感性有余理性不足。",moment:"舞台灯亮，你第一个冲出去，把所有人带进状态。"},
@@ -277,9 +324,9 @@
     var item = questionsData[index];
     var html = '<div class="question active">';
     html += '<div class="q-title">' + item.q + '</div>';
-    item.options.forEach(function(opt){
-      var selected = answers[index] === opt.type ? " selected" : "";
-      html += '<button type="button" class="option' + selected + '" data-type="' + opt.type + '">' + opt.text + '</button>';
+    item.options.forEach(function(opt, i){
+      var selected = answers[index] === i ? " selected" : "";
+      html += '<button type="button" class="option' + selected + '" data-index="' + i + '">' + opt.text + '</button>';
     });
     html += '<div class="btn-row">';
     html += '<button type="button" class="btn btn-prev"' + (index === 0 ? ' disabled' : '') + '>上一题</button>';
@@ -292,7 +339,7 @@
       btn.addEventListener("click", function(){
         optionBtns.forEach(function(b){ b.classList.remove("selected"); });
         btn.classList.add("selected");
-        answers[index] = btn.getAttribute("data-type");
+        answers[index] = parseInt(btn.getAttribute("data-index"), 10);
         quizArea.querySelector(".btn-next").disabled = false;
       });
     });
@@ -322,106 +369,50 @@
     progressBar.style.width = percent + "%";
   }
 
-  function countTypes(){
-    var count = {A:0,B:0,C:0,D:0};
-    answers.forEach(function(t){
-      if(t && count[t] !== undefined) count[t]++;
+  /* ========== 权重计分：每题按选项给人物加分 ========== */
+  function calculateScores(){
+    var scores = {};
+
+    // 初始化每个人为 0
+    Object.keys(profiles).forEach(function(k){ scores[k] = 0; });
+
+    answers.forEach(function(optIndex, qIndex){
+      if(optIndex === null) return;
+      var opt = questionsData[qIndex].options[optIndex];
+      if(!opt || !opt.weights) return;
+
+      Object.keys(opt.weights).forEach(function(personKey){
+        if(scores[personKey] === undefined) scores[personKey] = 0;
+        scores[personKey] += opt.weights[personKey];
+      });
     });
-    return count;
+
+    return scores;
   }
 
-  // ======= 新的结果映射逻辑：覆盖所有团、所有代 =======
   function pickProfile(){
-    var count = countTypes();
+    var scores = calculateScores();
+    var bestKey = null;
+    var bestScore = -1;
 
-    // 按分数从高到低排序，形成 key
-    var order = ["A","B","C","D"].sort(function(a,b){
-      return count[b] - count[a];
+    // 找最高分
+    Object.keys(scores).forEach(function(k){
+      if(scores[k] > bestScore){
+        bestScore = scores[k];
+        bestKey = k;
+      }
     });
-    var key = order.join("");
 
-    // 组合 -> 人物 key，尽量均衡覆盖所有代
-    var map = {
-      // 单一维度主导
-      "ABCD":"majiaqi",
-      "BACD":"dingchengxin",
-      "CABD":"songyaxuan",
-      "DABC":"suxinhao",
+    // 同分时随机破平，避免永远偏向列表前面的人
+    var topKeys = Object.keys(scores).filter(function(k){
+      return scores[k] === bestScore;
+    });
 
-      // 双维度主导
-      "ABDC":"zhangzhenyuan",
-      "ACDB":"hejunlin",
-      "ADCB":"yanhaoxiang",
-      "BCDA":"zhangzeyu",
-      "BDCA":"liuwen",
-      "CDAB":"zuohang",
-
-      "BADC":"zhuzhixin",
-      "CBAD":"zhangji",
-      "DBAC":"tongyukun",
-      "CADB":"zhangzimo",
-      "DACB":"zhangjunhao",
-      "DCAB":"yuyuhan",
-
-      "ADBC":"dengjiaxin",
-      "ACBD":"muzhicheng",
-      "ABDC2":"huangshuo",
-
-      // 三维度主导
-      "BCAD":"guanjunchen",
-      "BDAC":"zhangguiyuan",
-      "CBDA":"zhanghanrui",
-      "CDBA":"wanglujie",
-      "DCBA":"zuoqihan",
-      "DBCA":"chenyiheng",
-      "BACD2":"yangbowen",
-      "BADC2":"weizichen",
-      "BCDA2":"chenjunming",
-      "BDCA2":"chensihan",
-      "CABD2":"wangshuoran",
-      "CADB2":"yanghanbo",
-      "CBAD2":"zhangyiran",
-      "CDAB2":"nieweichen",
-      "DABC2":"liyudong",
-      "DACB2":"lvzhengxi",
-      "DBAC2":"gaomingyang",
-      "DCAB2":"shenzihang",
-      "ABCD2":"zhuyingchen",
-      "ABDC3":"zhienhan",
-      "ACBD2":"liuyuchen",
-      "ACDB2":"yangzihao",
-      "ADBC2":"yangyunhao",
-      "ADCB2":"houwangzi",
-
-      // 四维度均衡
-      "ABCD3":"yuzhenglin",
-      "ABDC4":"renxuanzhe",
-      "ACBD3":"chenjingyi",
-      "ACDB3":"zhaojunyu",
-      "ADBC3":"chenshen",
-      "ADCB3":"tongyi",
-      "BACD3":"huami",
-      "BADC3":"weixinhang",
-      "BCAD2":"zhangyuyan",
-      "BCDA3":"piziyu",
-      "BDAC2":"yanglinhao",
-      "BDCA3":"songjinze"
-    };
-
-    var profileKey = map[key];
-
-    if(!profileKey){
-      // 兜底：用最高分维度对应代表
-      var fallback = {
-        "A":"majiaqi",
-        "B":"dingchengxin",
-        "C":"songyaxuan",
-        "D":"suxinhao"
-      };
-      profileKey = fallback[order[0]] || "majiaqi";
+    if(topKeys.length > 1){
+      bestKey = topKeys[Math.floor(Math.random() * topKeys.length)];
     }
 
-    return profiles[profileKey] || profiles.majiaqi;
+    return profiles[bestKey] || profiles.majiaqi;
   }
 
   function showResult(){
