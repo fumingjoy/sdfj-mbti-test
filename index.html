@@ -277,7 +277,7 @@
     var item = questionsData[index];
     var html = '<div class="question active">';
     html += '<div class="q-title">' + item.q + '</div>';
-    item.options.forEach(function(opt, i){
+    item.options.forEach(function(opt){
       var selected = answers[index] === opt.type ? " selected" : "";
       html += '<button type="button" class="option' + selected + '" data-type="' + opt.type + '">' + opt.text + '</button>';
     });
@@ -301,7 +301,6 @@
       if(index > 0){
         currentQ = index - 1;
         renderQuestion(currentQ);
-        updateProgress();
       }
     });
 
@@ -310,7 +309,6 @@
       if(index < questionsData.length - 1){
         currentQ = index + 1;
         renderQuestion(currentQ);
-        updateProgress();
       }else{
         showResult();
       }
@@ -332,39 +330,95 @@
     return count;
   }
 
+  // ======= 新的结果映射逻辑：覆盖所有团、所有代 =======
   function pickProfile(){
     var count = countTypes();
-    var max = Math.max(count.A, count.B, count.C, count.D);
-    var dominant = [];
-    ["A","B","C","D"].forEach(function(k){
-      if(count[k] === max) dominant.push(k);
+
+    // 按分数从高到低排序，形成 key
+    var order = ["A","B","C","D"].sort(function(a,b){
+      return count[b] - count[a];
     });
+    var key = order.join("");
 
-    var key = dominant.join("");
-
+    // 组合 -> 人物 key，尽量均衡覆盖所有代
     var map = {
-      "A":"majiaqi",
-      "B":"dingchengxin",
-      "C":"songyaxuan",
-      "D":"suxinhao",
-      "AB":"zhangzhenyuan",
-      "AC":"hejunlin",
-      "AD":"yanhaoxiang",
-      "BC":"zhangzeyu",
-      "BD":"liuwen",
-      "CD":"zuohang",
-      "ABC":"zhuzhixin",
-      "ABD":"zhangji",
-      "ACD":"tongyukun",
-      "BCD":"zhangzimo",
-      "ABCD":"majiaqi"
+      // 单一维度主导
+      "ABCD":"majiaqi",
+      "BACD":"dingchengxin",
+      "CABD":"songyaxuan",
+      "DABC":"suxinhao",
+
+      // 双维度主导
+      "ABDC":"zhangzhenyuan",
+      "ACDB":"hejunlin",
+      "ADCB":"yanhaoxiang",
+      "BCDA":"zhangzeyu",
+      "BDCA":"liuwen",
+      "CDAB":"zuohang",
+
+      "BADC":"zhuzhixin",
+      "CBAD":"zhangji",
+      "DBAC":"tongyukun",
+      "CADB":"zhangzimo",
+      "DACB":"zhangjunhao",
+      "DCAB":"yuyuhan",
+
+      "ADBC":"dengjiaxin",
+      "ACBD":"muzhicheng",
+      "ABDC2":"huangshuo",
+
+      // 三维度主导
+      "BCAD":"guanjunchen",
+      "BDAC":"zhangguiyuan",
+      "CBDA":"zhanghanrui",
+      "CDBA":"wanglujie",
+      "DCBA":"zuoqihan",
+      "DBCA":"chenyiheng",
+      "BACD2":"yangbowen",
+      "BADC2":"weizichen",
+      "BCDA2":"chenjunming",
+      "BDCA2":"chensihan",
+      "CABD2":"wangshuoran",
+      "CADB2":"yanghanbo",
+      "CBAD2":"zhangyiran",
+      "CDAB2":"nieweichen",
+      "DABC2":"liyudong",
+      "DACB2":"lvzhengxi",
+      "DBAC2":"gaomingyang",
+      "DCAB2":"shenzihang",
+      "ABCD2":"zhuyingchen",
+      "ABDC3":"zhienhan",
+      "ACBD2":"liuyuchen",
+      "ACDB2":"yangzihao",
+      "ADBC2":"yangyunhao",
+      "ADCB2":"houwangzi",
+
+      // 四维度均衡
+      "ABCD3":"yuzhenglin",
+      "ABDC4":"renxuanzhe",
+      "ACBD3":"chenjingyi",
+      "ACDB3":"zhaojunyu",
+      "ADBC3":"chenshen",
+      "ADCB3":"tongyi",
+      "BACD3":"huami",
+      "BADC3":"weixinhang",
+      "BCAD2":"zhangyuyan",
+      "BCDA3":"piziyu",
+      "BDAC2":"yanglinhao",
+      "BDCA3":"songjinze"
     };
 
     var profileKey = map[key];
 
     if(!profileKey){
-      // 兜底：按 A B C D 顺序取第一个最高分
-      profileKey = map[dominant[0]] || "majiaqi";
+      // 兜底：用最高分维度对应代表
+      var fallback = {
+        "A":"majiaqi",
+        "B":"dingchengxin",
+        "C":"songyaxuan",
+        "D":"suxinhao"
+      };
+      profileKey = fallback[order[0]] || "majiaqi";
     }
 
     return profiles[profileKey] || profiles.majiaqi;
