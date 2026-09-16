@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>如果sdfj是你的MBTI，那你是哪种人格？</title>
+<style>
+  :root{
+    --bg:#000;
+    --card:#0c0c0e;
+    --card2:#111114;
+    --line:rgba(255,255,255,.08);
+    --line2:rgba(255,255,255,.16);
+    --text:#f5f5f7;
+    --text2:#a1a1a6;
+    --text3:#6e6e73;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif}
+  body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:28px 16px 60px;
+    background:
+      radial-gradient(1000px 500px at 50% -10%, rgba(255,255,255,.06), transparent 60%),
+      radial-gradient(700px 350px at 100% 0%, rgba(255,255,255,.03), transparent 60%),
+      #000;
+  }
+  .app{width:100%;max-width:720px}
+  .top{text-align:center;margin-bottom:22px}
+  .top h1{margin:0 0 8px;font-size:26px;line-height:1.3;font-weight:600;letter-spacing:-.02em}
+  .top p{margin:0;color:var(--text2);font-size:14px;line-height:1.6}
+  .card{
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border:1px solid var(--line);
+    border-radius:26px;
+    padding:22px 18px 20px;
+    box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 20px 60px rgba(0,0,0,.6);
+  }
+  .progress{height:6px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-bottom:22px}
+  .progress-inner{height:100%;width:0%;background:linear-gradient(90deg,#f5f5f7,#8e8e93);border-radius:99px;transition:width .3s ease}
+  .question{display:none}
+  .question.active{display:block;animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .q-title{font-size:18px;font-weight:600;line-height:1.5;letter-spacing:-.01em;margin-bottom:16px}
+  .option{
+    display:block;width:100%;text-align:left;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:16px;
+    border-radius:14px;
+    margin-bottom:10px;
+    font-size:15px;
+    line-height:1.55;
+    font-family:inherit;
+    cursor:pointer;
+    transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .option:hover{background:rgba(255,255,255,.07);border-color:var(--line2)}
+  .option:active{transform:scale(.992)}
+  .option.selected{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.32);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+  .btn-row{display:flex;gap:10px;margin-top:16px}
+  .btn{flex:1;border:none;border-radius:14px;padding:15px 14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .18s ease,transform .18s ease,background .18s ease}
+  .btn:active{transform:scale(.992)}
+  .btn-prev{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
+  .btn-prev:hover{background:rgba(255,255,255,.1)}
+  .btn-next{background:#f5f5f7;color:#000}
+  .btn-next:hover{opacity:.92}
+  .btn:disabled{opacity:.28;cursor:not-allowed}
+  .result{display:none}
+  .result.active{display:block;animation:fade .32s ease}
+  .badge{display:inline-block;padding:7px 12px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text2);font-size:12px;letter-spacing:.02em;margin-bottom:14px}
+  .result-title{font-size:28px;font-weight:700;line-height:1.35;letter-spacing:-.03em;margin-bottom:10px;color:#fff}
+  .keywords{color:var(--text2);font-size:14px;line-height:1.8;margin-bottom:18px}
+  .section{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:18px;padding:16px 15px;margin-bottom:12px}
+  .section h3{margin:0 0 8px;font-size:14px;font-weight:600;color:#fff;letter-spacing:-.01em}
+  .section p{margin:0;color:var(--text2);font-size:14px;line-height:1.75}
+  .restart{margin-top:18px;width:100%;border:1px solid var(--line);border-radius:14px;padding:15px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;background:rgba(255,255,255,.05);color:#fff;transition:background .18s ease,transform .18s ease}
+  .restart:hover{background:rgba(255,255,255,.09)}
+  .restart:active{transform:scale(.992)}
+  .note{margin-top:14px;color:var(--text3);font-size:12px;line-height:1.7;text-align:center}
+  @media(max-width:480px){
+    .top h1{font-size:22px}
+    .q-title{font-size:17px}
+    .result-title{font-size:24px}
+    .card{border-radius:22px;padding:20px 15px 18px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <h1>如果sdfj是你的MBTI<br>那你是哪种人格？</h1>
+    <p>共15题。凭第一反应选择。最后得出你是sdfj里的谁。</p>
+  </div>
+
+  <div class="card">
+    <div class="progress"><div class="progress-inner" id="progressBar"></div></div>
+    <div id="quizArea"></div>
+    <div class="result" id="resultArea"></div>
+    <div class="note">
+      本测试为娱乐向人格投射，人物信息来自你提供的文本与补充描述。<br>
+      信息缺失成员以可识别标签做结果描述。
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var questionsData = [
+    { q: "第1题：周末突然空出一整天，你最想怎么过？", options: [
+      { text: "一个人写歌、听歌、发呆，安静待着", type: "A" },
+      { text: "去跳舞、运动、做饭、画画，反正要动起来", type: "B" },
+      { text: "随便躺着，刷点好玩的，朋友叫我就出去", type: "C" },
+      { text: "打游戏、踢球、玩滑板，最好有点刺激", type: "D" }
+    ]},
+    { q: "第2题：你在陌生人群里通常是什么状态？", options: [
+      { text: "话不多，但观察得很细", type: "A" },
+      { text: "很快能热场，带大家玩起来", type: "B" },
+      { text: "表面呆萌，思维已经飘到别的地方", type: "C" },
+      { text: "遇强则强，有人卷我我就来劲", type: "D" }
+    ]},
+    { q: "第3题：别人对你的第一印象，最可能是？", options: [
+      { text: "稳、成熟、有责任感", type: "A" },
+      { text: "热烈、大方、大哥范儿", type: "B" },
+      { text: "干净、佛系、随遇而安", type: "C" },
+      { text: "有冲劲、争强好胜", type: "D" }
+    ]},
+    { q: "第4题：你最容易因为什么感到疲惫？", options: [
+      { text: "社交压力、被迫营业、想得太多", type: "A" },
+      { text: "太热闹，别人一直要我回应", type: "B" },
+      { text: "没有挑战，或者被人看不起", type: "C" },
+      { text: "自己不够完美，进度不够快", type: "D" }
+    ]},
+    { q: "第5题：朋友难过时，你更可能？", options: [
+      { text: "安静陪着，说点有深度的话", type: "A" },
+      { text: "直接带他出去跑一圈、吃一顿", type: "B" },
+      { text: "用轻松的方式逗他，不刻意沉重", type: "C" },
+      { text: "帮他分析问题，按逻辑解决", type: "D" }
+    ]},
+    { q: "第6题：你对待舞台/工作的态度更像？", options: [
+      { text: "喜欢艺术本身，不喜欢娱乐流量", type: "A" },
+      { text: "沉醉舞台，代入感强", type: "B" },
+      { text: "有综艺感，因为身上没包袱", type: "C" },
+      { text: "追求完美，非常自律，包揽策划", type: "D" }
+    ]},
+    { q: "第7题：你的房间/桌面通常是什么样？", options: [
+      { text: "东西不多，但有自己的秩序", type: "A" },
+      { text: "运动装备、发带、做饭工具随手放", type: "B" },
+      { text: "看起来乱，但我知道东西在哪", type: "C" },
+      { text: "网盘、文件、计划表都很整齐", type: "D" }
+    ]},
+    { q: "第8题：如果团队里出现尴尬冷场，你会？", options: [
+      { text: "不一定主动，但会观察谁需要救场", type: "A" },
+      { text: "直接站出来带气氛", type: "B" },
+      { text: "随口说句好笑的，不让话掉地上", type: "C" },
+      { text: "快速给方案，把节奏拉回正轨", type: "D" }
+    ]},
+    { q: "第9题：你更认同哪句话？", options: [
+      { text: "理想主义不是幼稚，是坚持", type: "A" },
+      { text: "热烈张扬，带大家无顾忌奔跑", type: "B" },
+      { text: "随遇而安，开心就好", type: "C" },
+      { text: "不完美，就继续练到完美", type: "D" }
+    ]},
+    { q: "第10题：你面对压力时最常？", options: [
+      { text: "自己消化，显得有点负能量", type: "A" },
+      { text: "动起来，跳舞运动做饭画画", type: "B" },
+      { text: "佛系躺平，顺其自然", type: "C" },
+      { text: "加压训练，自律到紧绷", type: "D" }
+    ]},
+    { q: "第11题：你最容易被人评价为？", options: [
+      { text: "成熟深邃，责任感强", type: "A" },
+      { text: "简单直接，大方真诚", type: "B" },
+      { text: "清新干净，坦然佛系", type: "C" },
+      { text: "高能量、事业批、完美主义", type: "D" }
+    ]},
+    { q: "第12题：如果给你一个完全自由的创作任务，你会？", options: [
+      { text: "写歌、唱歌，表达内心", type: "A" },
+      { text: "编舞、跳舞，用身体表达", type: "B" },
+      { text: "随便玩，灵感来了就做", type: "C" },
+      { text: "策划、编舞、拍摄、剪辑全包", type: "D" }
+    ]},
+    { q: "第13题：你更害怕哪种情况？", options: [
+      { text: "失去艺术初心，被流量裹挟", type: "A" },
+      { text: "团队不和谐，有人被冷落", type: "B" },
+      { text: "被束缚，不能随性", type: "C" },
+      { text: "自己不够好，拖累团队", type: "D" }
+    ]},
+    { q: "第14题：你的朋友最可能怎么形容你？", options: [
+      { text: "稳，不炸，像队长", type: "A" },
+      { text: "老顽童，舞台疯子", type: "B" },
+      { text: "呆萌，思维跳跃", type: "C" },
+      { text: "自律，完美主义，事业心强", type: "D" }
+    ]},
+    { q: "第15题：你希望别人怎么记住你？", options: [
+      { text: "一个坚持艺术的人", type: "A" },
+      { text: "一个热烈真诚的人", type: "B" },
+      { text: "一个干净随性的人", type: "C" },
+      { text: "一个追求完美的人", type: "D" }
+    ]}
+  ];
+
+  var profiles = {
+    majiaqi:{name:"马嘉祺",tag:"INFP-T / 不炸、稳",keywords:"安稳写歌、唱歌；喜欢艺术本身而非娱乐流量；成熟深邃，责任感、道义感强；喜静喜聚喜平和；理想主义者",good:"你像马嘉祺一样，心里有自己的艺术标准，不喜欢被流量裹挟。你责任感强，道义感重，很多时候不是没情绪，而是习惯自己消化。",bad:"因压力大、思虑多、要求高而略显负能量；行动有时跟不上对自己的要求。",moment:"一个人写歌到深夜，第二天又稳稳站上舞台。"},
+    dingchengxin:{name:"丁程鑫",tag:"老顽童 / 沉醉舞台",keywords:"跳舞、运动、发带、做饭、画画；简单直接、大方真诚，大哥范儿十足；热烈张扬",good:"你像丁程鑫一样，热烈、真诚、直接。你不怕表达，也不怕带气氛。",bad:"热烈有余谨慎不足，感性有余理性不足。",moment:"舞台灯亮，你第一个冲出去，把所有人带进状态。"},
+    songyaxuan:{name:"宋亚轩",tag:"综艺感强 / 弟弟范儿",keywords:"清新干净、坦然佛系、随遇而安；表面呆萌，思维跳跃",good:"你像宋亚轩一样，干净、坦然、随性。你身上没有太多包袱。",bad:"浪漫有余而现实不足，随性有余而坚定持久不足。",moment:"别人都在紧张，你一句轻飘飘的话把全场逗笑。"},
+    liuwen:{name:"刘耀文",tag:"进取心强 / 越难越来劲",keywords:"外向型，有争强好斗的进取心；从试训生快速出道，遇强则强",good:"你像刘耀文一样，有冲劲，遇强则强。",bad:"胜负欲可能让你偶尔太紧绷。",moment:"别人说这个很难，你说那我更要试试。"},
+    zhangzhenyuan:{name:"张真源",tag:"照顾者 / 团队稳定器",keywords:"有妈妈的感觉，也有大哥的感觉；沉稳老实人；照顾者角色",good:"你像张真源一样，稳、老实、可靠。你习惯照顾别人。",bad:"可能会太照顾别人而忽略自己。",moment:"所有人笑成一团，你默默把场子稳住。"},
+    yanhaoxiang:{name:"严浩翔",tag:"规矩 / 安稳 / 逻辑",keywords:"踢足球、想去慕尼黑；遵守规矩、安稳做事；玩游戏有自己一套逻辑思维",good:"你像严浩翔一样，规矩、安稳、有逻辑。",bad:"公开资料中未找到明确负面评价。",moment:"别人还在乱，你已经按逻辑找到解法。"},
+    hejunlin:{name:"贺峻霖",tag:"表达欲强 / 内心内向",keywords:"说相声、主持、想过读哲学系；话痨但其实是个内向的人；友善却有距离感",good:"你像贺峻霖一样，表达欲强，能说相声、能主持，但内心其实内向。",bad:"社交场合有时不够自然。",moment:"台上妙语连珠，台下安静得像另一个人。"},
+
+    zhuzhixin:{name:"朱志鑫",tag:"统领的队长",keywords:"安静慢热，温柔善良，心思细腻；高颜值，身材好，荷尔蒙爆棚",good:"你像朱志鑫一样，安静慢热，温柔善良，心思细腻。",bad:"唱歌和rap被质疑缺乏音乐细胞；发疯时嗓门大、做饭吓人。",moment:"安静站在那里，就已经很有统领感。"},
+    zhangzeyu:{name:"张泽禹",tag:"游戏王 / 东北话自带喜感",keywords:"滑板、卡丁车、篮球、足球、滑雪、架子鼓；综艺感强，不让别人的话落到地上",good:"你像张泽禹一样，综艺感强，不让别人的话落到地上。",bad:"从不展现负能量，总自己消化。",moment:"别人话掉地上，你马上接住，还顺便抛个梗。"},
+    zhangji:{name:"张极",tag:"记忆力强",keywords:"唱歌、跳舞、爱吃糖醋排骨；活跃气氛者；很抽象，脑回路跟常人不一样",good:"你像张极一样，是活跃气氛的人。你脑回路跟常人不一样。",bad:"公开资料中未找到明确负面评价。",moment:"大家还在正常聊天，你已经把气氛带到另一个频道。"},
+    zuohang:{name:"左航",tag:"佛系 / 说话像长辈",keywords:"唱歌、跳舞、看电影、漫威、骑机车；佛系，说话像长辈；rap很不错",good:"你像左航一样，佛系，说话像长辈。你rap不错。",bad:"出道以来总觉得他不太开心，积极性不高。",moment:"骑上机车，整个人帅到另一个图层。"},
+    suxinhao:{name:"苏新皓",tag:"追求完美 / 非常自律",keywords:"唱歌、跳舞、变魔术、弹钢琴；高能量，事业心极强，对自己要求极高",good:"你像苏新皓一样，高能量、事业批、自律。你追求完美。",bad:"事业批性格常被解读为太紧绷。",moment:"一个人包揽策划、编舞、拍摄、剪辑，还觉得不够好。"},
+
+    tongyukun:{name:"童禹坤",tag:"TFing / 吉他 / 幽默",keywords:"喜欢吉他；被描述为幽默",good:"你像童禹坤一样，喜欢吉他，身上有幽默感。",bad:"公开资料中未找到明确负面评价。",moment:"抱着吉他，随口一句话就把人逗笑。"},
+    dengjiaxin:{name:"邓佳鑫",tag:"TFing / 稳重善良",keywords:"稳重善良；缺点是容易遭人妒忌；喜欢吉他、有点强迫症",good:"你像邓佳鑫一样，稳重善良，喜欢吉他，有点强迫症。",bad:"容易遭人妒忌。",moment:"你什么都没做错，只是太稳太好，就有人酸。"},
+    muzhicheng:{name:"穆祉丞",tag:"TFing / 热情仗义",keywords:"热情仗义；缺点是难免情绪化",good:"你像穆祉丞一样，热情仗义。你对朋友很真，愿意站出来。",bad:"难免情绪化。",moment:"朋友有事，你第一个冲上去。"},
+    huangshuo:{name:"黄硕",tag:"TFing / 抽象",keywords:"二逼",good:"你像黄硕一样，有点二逼，有点抽象，不走常规路线。",bad:"二逼。",moment:"别人还在正经，你已经把画风带偏。"},
+    zhangzimo:{name:"张子墨",tag:"TFing / 香水",keywords:"喜欢香水；贱贱的",good:"你像张子墨一样，喜欢香水，身上有点贱贱的。",bad:"贱贱的。",moment:"喷上香水，贱兮兮地笑一下，全场拿你没办法。"},
+    zhangjunhao:{name:"张俊豪",tag:"solo / 爱装逼",keywords:"爱装逼",good:"你像张俊豪一样，爱装逼。你有自己的气场。",bad:"爱装逼。",moment:"别人还在谦虚，你已经把气场拉满。"},
+    yuyuhan:{name:"余宇涵",tag:"solo / 比较阴湿",keywords:"比较阴湿",good:"你像余宇涵一样，身上有一种阴湿感。你不是阳光直给型。",bad:"比较阴湿。",moment:"你不说话的时候，空气里已经有点潮。"},
+
+    guanjunchen:{name:"官俊臣",tag:"运动系 / 四代唯一成年成员",keywords:"国家一级游泳运动员；四代唯一成年成员；外号颠哥",good:"你像官俊臣一样，有运动员底子，是四代唯一成年成员。",bad:"性格、爱好、缺点公开资料不足。",moment:"不靠多说，靠身份和实力就已经有记忆点。"},
+    zhangguiyuan:{name:"张桂源",tag:"运动系少年代表 / 阳光开朗",keywords:"打篮球、变魔术；窗花剪纸；阳光开朗；运动系少年代表",good:"你像张桂源一样，阳光开朗，运动系少年代表。",bad:"有事发生容易挂脸，偶像包袱挺重。",moment:"球场上阳光开朗，镜头前又有点偶像包袱。"},
+    zhanghanrui:{name:"张函瑞",tag:"高音杀手 / 镜头感好",keywords:"唱歌、唱山歌；高音杀手；反应快，表情丰富；镜头感好",good:"你像张函瑞一样，高音杀手，反应快，表情丰富。",bad:"公开资料中未找到明确负面评价。",moment:"一开口高音上去，全场记住你。"},
+    wanglujie:{name:"王橹杰",tag:"舞台表现力强 / 四代门面主唱",keywords:"看书、拉小提琴、听音乐、骑单车、看哈利波特和小马宝莉；慢热，外冷内热",good:"你像王橹杰一样，慢热，外冷内热。你有责任心，做事专一。",bad:"公开资料中未找到明确负面评价。",moment:"睡前还在看书，上台却是门面主唱。"},
+    zuoqihan:{name:"左奇函",tag:"综艺感 / 能活跃气氛",keywords:"会变魔术；阳光开朗热情大方，但私下又敏感；能活跃气氛",good:"你像左奇函一样，阳光开朗热情大方，但私下又敏感。",bad:"长相平平；最新物料唱歌难听；爱sj粉圈。",moment:"既能接梗，也能为自己争取镜头。"},
+    chenyiheng:{name:"陈奕恒",tag:"综艺感四代最强 / 戏精",keywords:"早期安静；综艺感四代最强，戏精、有点人来疯",good:"你像陈奕恒一样，综艺感四代最强。你戏精、有点人来疯。",bad:"发福了，脸腮好大，唱跳全废；被评价为真的皇。",moment:"平时安静，一上综艺就变成戏精。"},
+    yangbowen:{name:"杨博文",tag:"舞蹈核心 / 沉稳",keywords:"粉丝MBTI分析为SI主导；沉稳；舞蹈核心；舞台上有表情管理的反差感",good:"你像杨博文一样，沉稳，是舞蹈核心。",bad:"爱好、缺点公开资料不足。",moment:"平时沉稳，音乐一响，表情管理直接切换。"},
+    weizichen:{name:"魏子宸",tag:"善良不争不抢 / 相信光",keywords:"看书、跳舞、唱歌；善良不争不抢、努力上进、喜欢抽象、喜欢奥特曼",good:"你像魏子宸一样，善良不争不抢，努力上进，相信光。",bad:"公开资料中未找到明确负面评价。",moment:"不争不抢，但一直相信光。"},
+    chenjunming:{name:"陈浚铭",tag:"门面 / 小全勤标兵",keywords:"音乐、吉他；爱哭鬼但从不真正哭；门面；小全勤标兵；热爱音乐",good:"你像陈浚铭一样，热爱音乐，吉他能让你专注坐很久。",bad:"公开资料中未找到明确负面评价。",moment:"别人叫你玩，你喃喃自语：不行，得练吉他。"},
+    chensihan:{name:"陈思罕",tag:"INFJ / 事业批 / 小太阳",keywords:"马术、舞蹈、架子鼓、篮球；INFJ；事业批；会主动拉孤单的伙伴融入集体",good:"你像陈思罕一样，初期偏内向，熟悉后活泼好动像小太阳。",bad:"体能不太好；刚上楼时总因莫须有谣言被骂。",moment:"看到有人落单，你会主动把他拉进集体。"},
+    wangshuoran:{name:"王烁然",tag:"四代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像王烁然一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
+    yanghanbo:{name:"杨涵博",tag:"四代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像杨涵博一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
+    zhangyiran:{name:"张奕然",tag:"四代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像张奕然一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
+    nieweichen:{name:"聂玮辰",tag:"ENFP / 人缘好",keywords:"MBTI为ENFP，性格人缘都很好，人情世故简单拿捏",good:"你像聂玮辰一样，ENFP，性格人缘都很好。",bad:"公开资料中未找到明确负面评价。",moment:"人情世故这东西，你简单拿捏。"},
+    liyudong:{name:"李煜东",tag:"四代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像李煜东一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
+
+    lvzhengxi:{name:"吕政熙",tag:"舞蹈担当 / 舞蹈考核榜首",keywords:"舞蹈担当，舞蹈考核位列榜首，力量感与框架突出",good:"你像吕政熙一样，舞蹈担当，舞蹈考核位列榜首。",bad:"性格、爱好、缺点公开资料不足。",moment:"音乐一响，框架和力量感直接拉满。"},
+    gaomingyang:{name:"高铭阳",tag:"内向 / 舞跳得有劲",keywords:"内向不爱说话；活泼古灵精怪的一面在小角落展现；舞跳得有劲",good:"你像高铭阳一样，内向不爱说话，但跳舞时热情蓬勃向外绽放。",bad:"公开资料中未找到明确负面评价。",moment:"平时不说话，跳舞时热情蓬勃向外绽放。"},
+    shenzihang:{name:"沈子航",tag:"对熟悉朋友e，对陌生人i",keywords:"对熟悉朋友e对陌生人i；嗓音清透；新音囚鸟唱得惊艳",good:"你像沈子航一样，对熟悉朋友e，对陌生人i。你嗓音清透。",bad:"公开资料中未找到明确负面评价。",moment:"陌生人面前安静，熟人面前直接变e。"},
+    zhuyingchen:{name:"朱映宸",tag:"渝队队长 / 综合Ace",keywords:"钢琴弹唱；渝队队长，综合Ace；声乐舞蹈双前五；昵称之之",good:"你像朱映宸一样，渝队队长，综合Ace。",bad:"公开资料中未找到明确负面评价。",moment:"带队夺冠，综合Ace不是白叫的。"},
+    zhienhan:{name:"智恩涵",tag:"蓉队队长 / 综合Ace",keywords:"蓉队队长，综合Ace；舞蹈第二，舞台掌控力强；唯一跨代成员；粉丝名纸飞机",good:"你像智恩涵一样，蓉队队长，综合Ace。你舞台掌控力强。",bad:"性格、爱好、缺点公开资料不足。",moment:"跨代而来，舞台掌控力直接拉满。"},
+    liuyuchen:{name:"刘禹辰",tag:"声乐担当 / 稳重",keywords:"相对稳重；声乐担当，演绎稳定；电话手表聊特朗普，被叫书记",good:"你像刘禹辰一样，相对稳重，是声乐担当。",bad:"公开资料中未找到明确负面评价。",moment:"电话手表聊特朗普，被叫书记。"},
+    yangzihao:{name:"杨子豪",tag:"五代主唱有力竞争者",keywords:"13岁，一公舞台清唱特别的人引发关注，被视为五代主唱有力竞争者",good:"你像杨子豪一样，13岁清唱特别的人引发关注。",bad:"性格、爱好、缺点公开资料不足。",moment:"一公舞台清唱，直接让人记住。"},
+    yangyunhao:{name:"杨云皓",tag:"云改改 / 来自火星的国王",keywords:"外号云改改，来自火星的国王",good:"你像杨云皓一样，外号云改改，来自火星的国王。",bad:"性格、爱好、缺点公开资料不足。",moment:"来自火星的国王，不需要解释。"},
+    houwangzi:{name:"侯王子",tag:"痞帅 / 对爸妈好",keywords:"看着很痞帅；最骄傲的事是对爸妈好",good:"你像侯王子一样，看着很痞帅，但最骄傲的事是对爸妈好。",bad:"性格、爱好、缺点公开资料不足。",moment:"看着痞帅，心里最软的地方留给爸妈。"},
+    yuzhenglin:{name:"余政霖",tag:"年会中6w6 / 做好事",keywords:"年会中了6w6；最骄傲的事是做好事",good:"你像余政霖一样，年会中了6w6，最骄傲的事是做好事。",bad:"性格、爱好、缺点公开资料不足。",moment:"运气来了挡不住，但最骄傲的还是做好事。"},
+    renxuanzhe:{name:"任玄哲",tag:"性格好 / 成都分部人缘最好",keywords:"淡淡的，性格很好，笑起来甜甜的；成都分部人缘最好的人",good:"你像任玄哲一样，淡淡的，性格很好，笑起来甜甜的。",bad:"被评价人长得挺丑的，像肿眼泡的大嘴蛙。",moment:"成都分部人缘最好，笑起来甜甜的。"},
+    chenjingyi:{name:"陈璟翊",tag:"五代练习生 / 新公开",keywords:"2026年5月通过考核正式公开亮相",good:"你像陈璟翊一样，2026年5月通过考核正式公开亮相。",bad:"性格、爱好、缺点公开资料不足。",moment:"正式公开亮相，一切刚刚开始。"},
+    zhaojunyu:{name:"赵俊羽",tag:"五代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像赵俊羽一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
+    chenshen:{name:"陈燊",tag:"耐看型 / 越看越好看",keywords:"与侯王子一起被评价长相属于耐看型的越看越好看",good:"你像陈燊一样，长相属于耐看型，越看越好看。",bad:"性格、爱好、缺点公开资料不足。",moment:"第一眼不一定惊艳，但越看越好看。"},
+    tongyi:{name:"佟弋",tag:"表达力强 / 逻辑出色",keywords:"表达能力、逻辑能力出色，回答诚恳接地气不场面话",good:"你像佟弋一样，表达能力和逻辑能力出色，回答诚恳接地气。",bad:"爱好、缺点公开资料不足。",moment:"不需要策划引导就能撑完一整场。"},
+    huami:{name:"胡阿米",tag:"中黎混血背景",keywords:"中黎混血背景",good:"你像胡阿米一样，有中黎混血背景，有自己的独特辨识度。",bad:"性格、爱好、缺点公开资料不足。",moment:"混血背景自带辨识度。"},
+    weixinhang:{name:"魏新航",tag:"五代练习生 / 做好事",keywords:"最骄傲的事是做好事",good:"你像魏新航一样，最骄傲的事是做好事。",bad:"性格、爱好、缺点公开资料不足。",moment:"最骄傲的事，是做好事。"},
+    zhangyuyan:{name:"张誉严",tag:"五代练习生 / 做好事",keywords:"最骄傲的事是做好事",good:"你像张誉严一样，最骄傲的事是做好事。",bad:"性格、爱好、缺点公开资料不足。",moment:"最骄傲的事，是做好事。"},
+    piziyu:{name:"皮子渝",tag:"五代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像皮子渝一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
+    yanglinhao:{name:"杨林好",tag:"五代邓佳鑫",keywords:"被评价为五代邓佳鑫",good:"你像杨林好一样，被评价为五代邓佳鑫，
