@@ -262,4 +262,142 @@
     weixinhang:{name:"魏新航",tag:"五代练习生 / 做好事",keywords:"最骄傲的事是做好事",good:"你像魏新航一样，最骄傲的事是做好事。",bad:"性格、爱好、缺点公开资料不足。",moment:"最骄傲的事，是做好事。"},
     zhangyuyan:{name:"张誉严",tag:"五代练习生 / 做好事",keywords:"最骄傲的事是做好事",good:"你像张誉严一样，最骄傲的事是做好事。",bad:"性格、爱好、缺点公开资料不足。",moment:"最骄傲的事，是做好事。"},
     piziyu:{name:"皮子渝",tag:"五代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像皮子渝一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"},
-    yanglinhao:{name:"杨林好",tag:"五代邓佳鑫",keywords:"被评价为五代邓佳鑫",good:"你像杨林好一样，被评价为五代邓佳鑫，
+    yanglinhao:{name:"杨林好",tag:"五代邓佳鑫",keywords:"被评价为五代邓佳鑫",good:"你像杨林好一样，被评价为五代邓佳鑫，身上有那种稳重又容易被看到的特点。",bad:"公开资料不足。",moment:"被叫五代邓佳鑫，本身就是一种辨识度。"},
+    songjinze:{name:"宋金泽",tag:"五代练习生 / 信息不足",keywords:"公开资料中性格、爱好、缺点信息严重不足",good:"你像宋金泽一样，公开信息很少，但有自己的未知空间。",bad:"公开资料不足。",moment:"还没被完全定义，所以一切皆有可能。"}
+  };
+
+  var answers = new Array(questionsData.length).fill(null);
+  var currentQ = 0;
+
+  var quizArea = document.getElementById("quizArea");
+  var resultArea = document.getElementById("resultArea");
+  var progressBar = document.getElementById("progressBar");
+
+  function renderQuestion(index){
+    var item = questionsData[index];
+    var html = '<div class="question active">';
+    html += '<div class="q-title">' + item.q + '</div>';
+    item.options.forEach(function(opt, i){
+      var selected = answers[index] === opt.type ? " selected" : "";
+      html += '<button type="button" class="option' + selected + '" data-type="' + opt.type + '">' + opt.text + '</button>';
+    });
+    html += '<div class="btn-row">';
+    html += '<button type="button" class="btn btn-prev"' + (index === 0 ? ' disabled' : '') + '>上一题</button>';
+    html += '<button type="button" class="btn btn-next"' + (answers[index] === null ? ' disabled' : '') + '>' + (index === questionsData.length - 1 ? '查看结果' : '下一题') + '</button>';
+    html += '</div></div>';
+    quizArea.innerHTML = html;
+
+    var optionBtns = quizArea.querySelectorAll(".option");
+    optionBtns.forEach(function(btn){
+      btn.addEventListener("click", function(){
+        optionBtns.forEach(function(b){ b.classList.remove("selected"); });
+        btn.classList.add("selected");
+        answers[index] = btn.getAttribute("data-type");
+        quizArea.querySelector(".btn-next").disabled = false;
+      });
+    });
+
+    quizArea.querySelector(".btn-prev").addEventListener("click", function(){
+      if(index > 0){
+        currentQ = index - 1;
+        renderQuestion(currentQ);
+        updateProgress();
+      }
+    });
+
+    quizArea.querySelector(".btn-next").addEventListener("click", function(){
+      if(answers[index] === null) return;
+      if(index < questionsData.length - 1){
+        currentQ = index + 1;
+        renderQuestion(currentQ);
+        updateProgress();
+      }else{
+        showResult();
+      }
+    });
+
+    updateProgress();
+  }
+
+  function updateProgress(){
+    var percent = (currentQ / questionsData.length) * 100;
+    progressBar.style.width = percent + "%";
+  }
+
+  function countTypes(){
+    var count = {A:0,B:0,C:0,D:0};
+    answers.forEach(function(t){
+      if(t && count[t] !== undefined) count[t]++;
+    });
+    return count;
+  }
+
+  function pickProfile(){
+    var count = countTypes();
+    var max = Math.max(count.A, count.B, count.C, count.D);
+    var dominant = [];
+    ["A","B","C","D"].forEach(function(k){
+      if(count[k] === max) dominant.push(k);
+    });
+
+    var key = dominant.join("");
+
+    var map = {
+      "A":"majiaqi",
+      "B":"dingchengxin",
+      "C":"songyaxuan",
+      "D":"suxinhao",
+      "AB":"zhangzhenyuan",
+      "AC":"hejunlin",
+      "AD":"yanhaoxiang",
+      "BC":"zhangzeyu",
+      "BD":"liuwen",
+      "CD":"zuohang",
+      "ABC":"zhuzhixin",
+      "ABD":"zhangji",
+      "ACD":"tongyukun",
+      "BCD":"zhangzimo",
+      "ABCD":"majiaqi"
+    };
+
+    var profileKey = map[key];
+
+    if(!profileKey){
+      // 兜底：按 A B C D 顺序取第一个最高分
+      profileKey = map[dominant[0]] || "majiaqi";
+    }
+
+    return profiles[profileKey] || profiles.majiaqi;
+  }
+
+  function showResult(){
+    var p = pickProfile();
+    resultArea.innerHTML =
+      '<div class="badge">测试结果</div>' +
+      '<div class="result-title">测试完毕，你是sdfj的' + p.name + '</div>' +
+      '<div class="keywords">' + p.keywords + '</div>' +
+      '<div class="section"><h3>人格标签</h3><p>' + p.tag + '</p></div>' +
+      '<div class="section"><h3>你像他的地方</h3><p>' + p.good + '</p></div>' +
+      '<div class="section"><h3>你的缺点</h3><p>' + p.bad + '</p></div>' +
+      '<div class="section"><h3>最适合你的sdfj瞬间</h3><p>' + p.moment + '</p></div>' +
+      '<button type="button" class="restart" id="restartBtn">重新测试</button>';
+
+    quizArea.style.display = "none";
+    resultArea.classList.add("active");
+    progressBar.style.width = "100%";
+
+    document.getElementById("restartBtn").addEventListener("click", function(){
+      answers = new Array(questionsData.length).fill(null);
+      currentQ = 0;
+      resultArea.classList.remove("active");
+      resultArea.innerHTML = "";
+      quizArea.style.display = "block";
+      renderQuestion(0);
+    });
+  }
+
+  renderQuestion(0);
+})();
+</script>
+</body>
+</html>
